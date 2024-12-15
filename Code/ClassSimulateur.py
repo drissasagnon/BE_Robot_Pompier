@@ -1,29 +1,35 @@
 import numpy as np
-import ClassRobot.py as robot
-import ClassManager.py as manager
-import ClassFeu.py as feu 
-import ClassIHM.py as IHM 
-import ClassCarte.py as carte
+import ClassRobot as robot
+import ClassManager as manager
+import ClassFeu as feu 
+import ClassIHM as IHM 
+import ClassCarte as carte
+import time as time
 
 class simulateur:
     def __init__(self):
-        vitesseSimu = 1
+        self.vitesseSimu = 1
         self.listeFeu = []
         self.listeRobot = []
-    def executerSimulation() :
-        while(len(simulateur.listeFeu)>0):
-            manager.affecter(robot,feu)
-            robot.mae()
+
+    def executerSimulation(self, manager) :
+        i = 0
+        while(len(self.listeFeu)>0):
+            time.sleep(self.vitesseSimu)
+            manager.affecter_robot(self)
+            for r in self.listeRobot:
+                r.mae()
 
     def lancerSimulation(self):
         print("La simulation est lancee")
 
-    def ajouterFeu(self):
-        self.listeFeu=self.listeFeu.append(('F',feu.coordonnerFeu))
+    def ajouterFeu(self, feu):
+        self.listeFeu.append(feu)
         print("Un feu est ajoute")
+        print(self.listeFeu[0])
 
-    def ajouterRobot(self):
-        self.listeRobot=self.listeRobot.append(('R',robot.id, robot.coordonnerRobot))
+    def ajouterRobot(self, robot):
+        self.listeRobot.append(robot)
         print("Un robot est ajoute")
     
     def lireCarte(self):

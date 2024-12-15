@@ -1,20 +1,23 @@
 import numpy as np
-import ClassRobot.py as robot
-import ClassManager.py as manager
-import ClassIHM.py as IHM 
-import ClassSimulateur.py as simulateur 
-import ClassCarte.py as carte
+import ClassRobot as robot
+import ClassManager as manager
+import ClassIHM as IHM 
+import ClassSimulateur as simulateur 
+import ClassCarte as carte
 
 
 class feu:
     def __init__(self):
         self.idFeu= 0
-        self.coordonneerFeu = None
+        self.coordonneeFeu = None
         self.ampleur = 20
+        self.etat = "actif"
+        self.assigned = False
 
     def seDeclencher(self):
-        carte.carte(self.coordonneerFeu)== 'Feu'
+        carte.carte(self.coordonneeFeu)== 'Feu'
         print("Un feu s'est declenche")
+        
     def eteindre(self):
         if self.ampleur==0 :
             simulateur.listeFeu.remove(Feu)
