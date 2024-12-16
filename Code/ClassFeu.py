@@ -1,24 +1,16 @@
-import numpy as np
-import ClassRobot as robot
-import ClassManager as manager
-import ClassIHM as IHM 
-import ClassSimulateur as simulateur 
-import ClassCarte as carte
-
-
-class feu:
-    def __init__(self):
-        self.idFeu= 0
-        self.coordonneeFeu = None
-        self.ampleur = 20
-        self.etat = "actif"
-        self.assigned = False
+class Feu:
+    def __init__(self, idFeu, ampleur, coordonnees):
+        if not isinstance(ampleur, (int, float)) or ampleur <= 0:
+            raise ValueError("L'ampleur du feu doit être un entier ou un flottant positif.")
+        if not isinstance(coordonnees, list) or len(coordonnees) != 2:
+            raise ValueError("Les coordonnées doivent être une liste de deux éléments.")
+        self.idFeu = idFeu
+        self.ampleur = ampleur
+        self.coordonnees = coordonnees
 
     def seDeclencher(self):
-        carte.carte(self.coordonneeFeu)== 'Feu'
-        print("Un feu s'est declenche")
-        
-    def eteindre(self):
-        if self.ampleur==0 :
-            simulateur.listeFeu.remove(Feu)
+        print(f"Le feu {self.idFeu} s'est déclenché aux coordonnées {self.coordonnees}.")
 
+    def eteindre(self):
+        self.ampleur = 0
+        print(f"Le feu {self.idFeu} a été éteint.")
