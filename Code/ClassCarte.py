@@ -1,14 +1,10 @@
-import numpy as np
-import ClassRobot.py as robot
-import ClassManager.py as manager
-import ClassFeu.py as feu 
-import ClassIHM.py as IHM 
-import ClassSimulateur.py as simulateur 
+class Carte:
+    def __init__(self, taille):
+        self.taille = taille
+        self.repere = [[0] * taille for _ in range(taille)]
 
-class carte:
-    def __init__(self):
-        self.taille=(2000,2000)
-        self.repere =np.zeros(self.taille)
-        self.coordonneerBase=self.carte[0,0]
     def chargerCarte(self):
-        print(self.repere)
+        """
+        Charge une carte simple.
+        """
+        print("Carte chargée avec succès.")

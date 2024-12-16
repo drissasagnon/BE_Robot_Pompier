@@ -1,114 +1,51 @@
-import numpy as np
-import ClassManager.py as manager
-import ClassFeu.py as feu 
-import ClassIHM.py as IHM 
-import ClassSimulateur.py as simulateur 
-import ClassCarte.py as carte
-
-class robot:
-    def __init__(self):
-        self.coordonneerRobot = [carte.coordonnerBase[0],carte.coordonnerBase[1]]
-        self.vitesse = 0
-        self.idRobot = 0
-        self.etat = "a la base"
-        self.etatEau = 50
-        self.robotDispo = True
-        self.typeRobot = ""
-        self.constante = 1
-        self.distance=0 
-        self.constante=1   
-        self.nbRobot= 0    
-        
-    def eteindreFeu(self) :
-        while(feu.ampleurFeu>0) :
-            if feu.coordonneerFeu== self.coordonnerRobot:
-                self.etatEau=self.etatEau-1
-                feu.ampleurFeu=feu.ampleurFeu -1 
-                T=('F',feu.coordonnerFeu)
-                simulateur.listeFeu= simulateur.listeFeu.remove(T)
-                print("Le feu est éteint")
-            else :
-                a=np.rand(0,1)
-                if a==0 :
-                    ampleurFeu=ampleurFeu-1
-                else :
-                    ampleurFeu=ampleurFeu+1
-        
-    def seDeplacer(self):
-        if (feu.coordonneerFeu(0)-self.coordonnerRobot(0))<0 and (feu.coordonneerFeu(1)-self.coordonnerRobot(1))<0 and len(feu.listeFeu)>0:
-            self.coordonneerRobot[0]=self.coordonneerRobot[0]-self.constante
-            self.coordonneerRobot[1]=self.coordonneerRobot[1]-self.constante
-            self.etat == "en déplacement"
-            carte.carte(self.coordonneerRobot[0],self.coordonneerRobot[1])=='R'
-        elif (feu.coordonneerFeu(0)-self.coordonnerRobot(0))>0 and (feu.coordonneerFeu(1)-self.coordonnerRobot(1))>0 and len(feu.listeFeu)>0:
-            self.coordonneerRobot[0]=self.coordonneerRobot[0]+self.constante
-            self.coordonneerRobot[1]=self.coordonneerRobot[1]+self.constante
-            self.etat == "en déplacement"
-            carte.carte(self.coordonneerRobot[0],self.coordonneerRobot[1])=='R'
-        elif (feu.coordonneerFeu(0)-self.coordonnerRobot(0))<0 and (feu.coordonneerFeu(1)-self.coordonnerRobot(1))>0 and len(feu.listeFeu)>0:   
-            self.coordonneerRobot[0]=self.coordonneerRobot[0]-self.constante
-            self.coordonneerRobot[1]=self.coordonneerRobot[1]+self.constante
-            self.etat == "en déplacement"
-            carte.carte(self.coordonneerRobot[0],self.coordonneerRobot[1])=='R'
-        elif (feu.coordonneerFeu(0)-self.coordonnerRobot(0))>0 and (feu.coordonneerFeu(1)-self.coordonnerRobot(1))<0 and len(feu.listeFeu)>0:
-            self.coordonneerRobot[0]=self.coordonneerRobot[0]+self.constante
-            self.coordonneerRobot[1]=self.coordonneerRobot[1]-self.constante
-            self.etat == "en déplacement"
-            carte.carte(self.coordonneerRobot[0],self.coordonneerRobot[1])=='R'
-
-    def calculerDistance(self):
-        self.distance = np.sqrt((feu.coordonneerFeu[0]-self.coordonneerRobot[0])**2+(feu.coordonneerFeu[1]-self.coordonneerRobot[1])**2)
-        print("Le robot calcule la distance")
+class Robot:
+    def __init__(self, idRobot, typeRobot, nom, vitesse):
+        self.idRobot = idRobot            # Identifiant du robot
+        self.typeRobot = typeRobot        # Type du robot
+        self.nom = nom                    # Nom du robot
+        self.vitesse = vitesse            # Vitesse du robot
+        self.coordonnees = [0, 0]         # Position initiale (à la base)
+        self.robotDispo = True            # Disponibilité du robot
+        self.etat = "A la base"           # État initial
+        self.etatEau = 100                # Réservoir d'eau (en %)
 
     def remplirReservoir(self):
-        if self.stockFeu==0:
-            self.stockFeu=2
-        print("Le robot se rempli")
-    def estDevantFeu(self) :
-        if self.calculerDistance(self)<1 :
-            return True
-        
-    def mae(self, feu_coordonnees=None, ampleurFeu=None, nouvelle_mission=None):
-            if self.etat == "a la base":
-                print("État : À la base")
-                if self.stockFeu < 2:
-                    self.remplirReservoir()  # Le remplissage est géré ici
-                if feu_coordonnees is not None:  # Une mission est disponible
-                    self.calculerDistance(feu_coordonnees)
-                    self.etat = "en attente de mission"
+        self.etatEau = 100
+        self.etat = "Remplit réservoir"
+        print(f"Robot {self.idRobot} remplit son réservoir d'eau.")
 
-            elif self.etat == "en attente de mission":
-                print("État : En attente de mission")
-                if feu_coordonnees is not None:  # Une mission est confirmée
-                    print("Nouvelle mission reçue !")
-                    self.calculerDistance(feu_coordonnees)
-                    self.etat = "en déplacement"
+    def seDeplacer(self, destination):
+        self.etat = "En déplacement"
+        print(f"Robot {self.idRobot} se déplace vers {destination}.")
+        self.coordonnees = destination  # Mise à jour de la position
 
-            elif self.etat == "en déplacement":
-                print("État : En déplacement")
-                if feu_coordonnees is not None:  # Se déplacer vers le feu
-                    self.seDeplacer(feu_coordonnees)
-                    if self.estDevantFeu(coordonneerRobot,feu_coordonnees):  # Vérifier si arrivé à destination
-                        print("Robot arrivé à destination.")
-                        self.etat = "extinction du feu"
+    def eteindreFeu(self, coordonneesFeu, ampleurFeu):
+        self.etat = "Eteint le feu"
+        print(f"Robot {self.idRobot} éteint le feu à {coordonneesFeu}.")
+        self.etatEau -= ampleurFeu * 10  # Consommation d'eau en fonction de l'ampleur du feu
 
-            elif self.etat == "extinction du feu":
-                print("État : Extinction du feu")
-                if feu_coordonnees is not None and ampleurFeu is not None:  # Si à proximité du feu
-                    self.eteindreFeu(feu_coordonnees, ampleurFeu)  # Éteindre le feu
-                    if self.stockFeu == 0:  # Si le réservoir est vide
-                        self.etat = "retour à la base"
-                    else:  # Si encore du stock, retourner à l'état initial
-                        self.etat = "a la base"
+    def retournerBase(self):
+        self.etat = "Retour à la base"
+        print(f"Robot {self.idRobot} retourne à la base.")
+        self.coordonnees = [0, 0]  # Retour à la base
 
-            elif self.etat == "retour à la base":
-                print("État : Retour à la base")
-                self.seDeplacer([0, 0])  # Retourner aux coordonnées de la base
-                if nouvelle_mission and self.stockFeu >= 1:  # Nouvelle mission en chemin
-                    print("Nouvelle mission reçue pendant le retour à la base !")
-                    feu_coordonnees = nouvelle_mission  # Mise à jour des coordonnées pour la nouvelle mission
-                    self.calculerDistance(feu_coordonnees)
-                    self.etat = "en déplacement"
-                elif self.coordonneerRobot == [0, 0]:  # Si arrivé à la base
-                    print("Robot est arrivé à la base.")
-                    self.etat = "a la base"  # Passer à l'état "a la base"
+    def mae(self, coordonneesFeu, ampleurFeu):
+        """Machine à États pour le robot"""
+        if self.etat == "A la base":
+            self.remplirReservoir()
+
+        if self.etat == "Remplit réservoir":
+            self.seDeplacer(coordonneesFeu)
+
+        if self.etat == "En déplacement":
+            print(f"Robot {self.idRobot} est arrivé au feu.")
+            self.eteindreFeu(coordonneesFeu, ampleurFeu)
+
+        if self.etat == "Eteint le feu":
+            print(f"Robot {self.idRobot} a éteint le feu.")
+            self.retournerBase()
+
+        if self.etat == "Retour à la base":
+            print(f"Robot {self.idRobot} est retourné à la base.")
+            self.robotDispo = True
+            self.etat = "A la base"  # Retour à l'état initial

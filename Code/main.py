@@ -1,10 +1,11 @@
-import numpy as np 
-import ClassRobot.py as robot
-import ClassManager.py as manager
-import ClassFeu.py as feu 
-import ClassIHM.py as IHM 
-import ClassSimulateur.py as simulateur 
-import ClassCarte.py as carte
+from ClassSimulateur import Simulateur
+from ClassIHM import IHM
 
-simulateur.run()
+# Créer une instance du simulateur
+simulateur = Simulateur()
 
+# Passer l'instance du simulateur à IHM
+ihm = IHM(simulateur)
+
+# Lancer le menu principal
+ihm.menu_principal()
